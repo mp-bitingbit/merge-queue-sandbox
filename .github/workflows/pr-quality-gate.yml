@@ -1,0 +1,23 @@
+name: PR Quality Gate
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+
+jobs:
+  build:
+    if: github.event.pull_request.draft == false
+    name: PR Quality checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint project
+        run: npm run lint
